@@ -3,6 +3,7 @@ import esbuild from "lume/plugins/esbuild.ts";
 import text from "lume/core/loaders/text.ts";
 import { songPreprocessor } from "./song_preprocessor.ts";
 import pagefind from "lume/plugins/pagefind.ts";
+import relativeUrls from "lume/plugins/relative_urls.ts";
 
 const site = lume();
 
@@ -27,5 +28,6 @@ site.add("manifest.json");
 site.add("img");
 
 site.use(pagefind());
+site.use(relativeUrls());
 
 export default site;
