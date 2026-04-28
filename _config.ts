@@ -5,8 +5,23 @@ import { songPreprocessor } from "./song_preprocessor.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
 
-const site = lume();
 
+let location = new URL("http://localhost:3000/");
+
+
+const repo = Deno.env.get("GITHUB_REPOSITORY");
+if (repo !== undefined) {
+    const [owner, name] = repo.split("/");
+
+    const isUserSite = name === `${owner}.github.io`;
+
+    const basePath = isUserSite ? "/" : `/${name}/`;
+    location = new URL(`https://${owner}.github.io${basePath}`);
+}
+
+const site = lume({
+  location,
+});
 
 site.loadPages([".song"], {
     loader: text,
