@@ -35,13 +35,27 @@ self.addEventListener('fetch', function(evt) {
 });
 
 async function fromCache(request) {
+  const url = new URL(event.request.url);
+
+  url.search = '';
+
+  const normalizedRequest = new Request(url, {
+    method: event.request.method,
+    headers: event.request.headers,
+    mode: event.request.mode,
+    credentials: event.request.credentials,
+  });
+
   const cache = await caches.open(PRECACHE);
-  return await cache.match(request, {ignoreSearch: true});
+
+  return await cache.match(normalizedRequest);
 }
 
 async function update(request) {
+  const url = new URL(request.url);
+  url.search = '';
   const cache = await caches.open(PRECACHE);
-  const response = await fetch(request);
-  await cache.put(request, response.clone());
+  const response = await fetch(url);
+  await cache.put(url.toString(), response.clone());
   return response;
 }
