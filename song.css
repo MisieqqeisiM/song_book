@@ -150,8 +150,8 @@ body {
   text-align: right;
 }
 
-.chord:first-child {
-  margin-left: 10px;
+.chords {
+  padding-left: 10px;
 }
 
 .chord {
