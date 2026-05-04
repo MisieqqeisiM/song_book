@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/song.css" />
     <link rel="manifest" href="/manifest.json">
     <link href="/pagefind/pagefind-component-ui.css" rel="stylesheet">
@@ -28,7 +29,9 @@
         <span id="transpose-value">0</span>
         <button id="transpose-up">+</button>
     </div>
-    {{ content }}
+    <div class="lyrics">
+      {{ content }}
+    </div>
     </div>
     <div data-pagefind-body style="display: none;">
       {{ lyrics }}

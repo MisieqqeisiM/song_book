@@ -8,8 +8,16 @@
   padding: 0;
 }
 
+
+
 body {
-  font-family: Verdana, system-ui, -apple-system, sans-serif;
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 350;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 62.5;
+
   background: #f5f5f5;
   color: #222;
 
@@ -22,6 +30,7 @@ body {
 }
 
 .song-header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -30,6 +39,8 @@ body {
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   margin-bottom: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .search-container {
@@ -64,19 +75,24 @@ body {
 .transpose-controls button {
   padding: 6px 12px;
   font-size: 1rem;
-  border: none;
+  border: solid 1px #1a4fd1;
   border-radius: 6px;
-  background: #1a4fd1;
-  color: white;
+  color: #1a4fd1;
+  background-color: white;
   cursor: pointer;
+}
+
+.transpose-controls button:hover {
+  background-color: #8daaf4;
+  color: white;
 }
 
 .transpose-controls button:active {
   transform: scale(0.96);
 }
 
-.transpose-value {
-  min-width: 30px;
+#transpose-value {
+  min-width: 25px;
   text-align: center;
   font-weight: 600;
 }
@@ -91,9 +107,15 @@ body {
   width: 100%;
   max-width: 700px;
   background: #fff;
-  padding: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .song-table {
@@ -124,15 +146,14 @@ body {
   text-align: right;
 }
 
+.chord:first-child {
+  margin-left: 10px;
+}
+
 .chord {
   display: inline-block;
-  margin-left: 6px;
-  padding: 2px 6px;
-  font-size: 0.85rem;
-  background: #e8f0ff;
   color: #1a4fd1;
-  border-radius: 4px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 @media (max-width: 720px) {

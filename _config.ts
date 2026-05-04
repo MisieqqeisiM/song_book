@@ -4,7 +4,7 @@ import text from "lume/core/loaders/text.ts";
 import { songPreprocessor } from "./song_preprocessor.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
-
+import googleFonts from "lume/plugins/google_fonts.ts";
 
 const base = Deno.env.get("BASE_PATH") ?? "/";
 
@@ -37,7 +37,9 @@ site.add("img");
 
 site.use(pagefind());
 site.use(relativeUrls());
-console.log(site)
+site.use(googleFonts({
+  fonts: "https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5,100..900;1,62.5,100..900"
+}));
 
 site.process([".json"], (pages) => {
     for (const page of pages) {

@@ -24,8 +24,12 @@ function getTransposeValueString(): string {
 
 const minorNoteNames = ["a", "b", "h", "c", "cis", "d", "dis", "e", "f", "fis", "g", "gis"];
 const majorNoteNames = ["A", "B", "H", "C", "Cis", "D", "Dis", "E", "F", "Fis", "G", "Gis"];
-const minorNoteRegex = new RegExp(`(${minorNoteNames.join("|")})`, "g");
-const majorNoteRegex = new RegExp(`(${majorNoteNames.join("|")})`, "g");
+
+const sortedMinor = [...minorNoteNames].sort((a, b) => b.length - a.length);
+const sortedMajor = [...majorNoteNames].sort((a, b) => b.length - a.length);
+
+const minorNoteRegex = new RegExp(`(${sortedMinor.join("|")})`, "g");
+const majorNoteRegex = new RegExp(`(${sortedMajor.join("|")})`, "g");
 
 function getNotePlacement(chord: string): { n: number, start: number, end: number, major: boolean }[] {
     const placements: { n: number, start: number, end: number, major: boolean }[] = [];
