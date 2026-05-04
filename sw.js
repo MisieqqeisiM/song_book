@@ -36,19 +36,9 @@ self.addEventListener('fetch', function(evt) {
 
 async function fromCache(request) {
   const url = new URL(request.url);
-
-  url.search = '';
-
-  const normalizedRequest = new Request(url, {
-    method: event.request.method,
-    headers: event.request.headers,
-    mode: event.request.mode,
-    credentials: event.request.credentials,
-  });
-
+  const cleanUrl = url.pathname;
   const cache = await caches.open(PRECACHE);
-
-  return await cache.match(normalizedRequest);
+  return await cache.match(cleanUrl);
 }
 
 async function update(request) {
