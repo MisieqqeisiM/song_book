@@ -23,10 +23,9 @@ jobs:
           cache: true
 
       - name: Build site
-      
-        run: |
-          echo "BASE_PATH=/${{ github.event.repository.name }}/" >> $GITHUB_ENV
-          deno task build
+        env: 
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: deno task build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
