@@ -25,13 +25,10 @@ self.addEventListener('activate', event => {
 
 
 self.addEventListener('fetch', function(evt) {
-  if (!evt.request.url.includes(evt.request.referrer)){
-    return;
-  }
   evt.respondWith(fromCache(evt.request));
-  // evt.waitUntil(
-  //   update(evt.request)
-  // );
+  evt.waitUntil(
+    update(evt.request)
+  );
 });
 
 async function fromCache(request) {
