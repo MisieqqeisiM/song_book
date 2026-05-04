@@ -1,38 +1,47 @@
-const CACHE_NAME = "my-app-cache-v2";
+const PRECACHE = 'precache';
 
-self.addEventListener("install", event => {
-  self.skipWaiting();
+self.addEventListener('install', event => {
+  event.waitUntil(async function() {
+    const response = await fetch("./cache.json");
+    const urls = await response.json();
+    const cache = await caches.open(PRECACHE);
+    await cache.addAll(urls);
+    await self.skipWaiting();
+  }());
+});
 
+self.addEventListener('activate', event => {
+  const currentCaches = [PRECACHE];
   event.waitUntil(
-    fetch("./cache.json")
-      .then(res => res.json())
-      .then(urls =>
-        caches.open(CACHE_NAME).then(cache => cache.addAll(urls))
-      )
+    caches.keys().then(cacheNames => {
+      return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
+    }).then(cachesToDelete => {
+      return Promise.all(cachesToDelete.map(cacheToDelete => {
+        return caches.delete(cacheToDelete);
+      }));
+    }).then(() => self.clients.claim())
   );
 });
 
-self.addEventListener("activate", event => {
-  self.clients.claim();
 
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
-    )
+self.addEventListener('fetch', function(evt) {
+  if (!evt.request.url.includes(evt.request.referrer)){
+    return;
+  }
+  evt.respondWith(fromCache(evt.request));
+  evt.waitUntil(
+    update(evt.request)
   );
 });
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      return (
-        cached ||
-        fetch(event.request).catch(() => cached)
-      );
-    })
-  );
-});
+async function fromCache(request) {
+  const cache = await caches.open(PRECACHE);
+  return await cache.match(request, {ignoreSearch: true});
+}
+
+async function update(request) {
+  const cache = await caches.open(PRECACHE);
+  const response = await fetch(request);
+  await cache.put(request, response.clone());
+  return response;
+}

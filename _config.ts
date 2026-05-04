@@ -54,6 +54,8 @@ site.process([".js"], (pages) => {
 site.addEventListener("afterBuild", () => {
     const urls = site.pages.map(page => page.outputPath)
         .map(path => base + path.substring(1));
+    const indexUrls = urls.filter(url => url.endsWith("index.html")).map(url => url.substring(0, url.length - "index.html".length));
+    urls.push(...indexUrls);
     Deno.writeTextFileSync("_site/cache.json", JSON.stringify(urls));
 });
 
