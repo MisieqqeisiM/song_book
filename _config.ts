@@ -7,6 +7,7 @@ import relativeUrls from "lume/plugins/relative_urls.ts";
 import googleFonts from "lume/plugins/google_fonts.ts";
 
 const base = Deno.env.get("BASE_PATH") ?? "/";
+const buildHash = crypto.randomUUID(); // TODO: Generate hash based on content
 
 const site = lume();
 
@@ -31,6 +32,7 @@ site.add("transpose.ts");
 site.add("main.ts");
 site.add("searchbar.ts");
 site.add("song.css");
+site.add("home.css");
 site.add("sw.js");
 site.add("manifest.json");
 site.add("img");
@@ -38,7 +40,9 @@ site.add("img");
 site.use(pagefind());
 site.use(relativeUrls());
 site.use(googleFonts({
-  fonts: "https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5,100..900;1,62.5,100..900"
+  fonts: {
+    inter: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900", 
+  }
 }));
 
 site.process([".json"], (pages) => {
@@ -47,9 +51,13 @@ site.process([".json"], (pages) => {
     }
 });
 
+
 site.process([".js"], (pages) => {
     for (const page of pages) {
-        page.text = page.text.replace(/{{\s*base\s*}}/g, base);
+        page.text = page.text
+            .replace(/{{\s*base\s*}}/g, base)
+            .replace(/{{\s*buildHash\s*}}/g, buildHash);
+
     }
 });
 

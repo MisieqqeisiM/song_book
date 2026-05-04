@@ -1,4 +1,4 @@
-const PRECACHE = 'precache';
+const PRECACHE = 'precache-{{buildHash}}';
 
 self.addEventListener('install', event => {
   event.waitUntil(async function() {

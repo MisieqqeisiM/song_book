@@ -3,9 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/song.css" />
+    <link rel="stylesheet" href="/home.css" />
     <link href="/pagefind/pagefind-component-ui.css" rel="stylesheet">
     <script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="/manifest.json">
     <script src="/main.js"></script>
     <pagefind-config base-url="{{ base }}"></pagefind-config>
@@ -13,7 +14,11 @@
     <title>{{ title }}</title>
   </head>
   <body>
-    {{ content }}
-    <pagefind-searchbox></pagefind-searchbox>
+    <div class = "home-container">
+      {{ content }}
+      <div class="search-container">
+        <pagefind-searchbox></pagefind-searchbox>
+      </div>
+    </div>
   </body>
 </html>
