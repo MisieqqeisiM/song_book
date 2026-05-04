@@ -6,6 +6,7 @@ export function songPreprocessor(pages: Page[]): void {
         page.data.content = songData.table;
         page.data.title = songData.title;
         page.data.author = songData.author;
+        page.data.lyrics = songData.lyrics;
         page.data.layout = "song.vto";
     }
 }
@@ -14,6 +15,7 @@ interface SongData {
     title: string;
     author: string;
     table: string;
+    lyrics: string;
 }
 
 function splitIntoVerses(lines: string[]): string[][] {
@@ -95,9 +97,17 @@ function songToHtmlTable(song: string): SongData {
 
     const verses = splitIntoVerses(lines);
     const table = verses.map(verse => verseToHtmlTable(verse)).join("<br/>");
+    const lyrics = extractLyrics(song);
 
 
-    return { title, author, table };
+    return { title, author, table, lyrics };
+}
+
+function extractLyrics(song: string): string {
+    const lines = song.split("\n");
+    const lyricsLines = lines.filter(line => !line.startsWith("title:") && !line.startsWith("author:"));
+    const withoutChords = lyricsLines.map(line => line.replace(/\s*\[.*?\]\s*/g, "").trim());
+    return withoutChords.join("\n");
 }
 
 // Simple HTML escaping to avoid injection issues

@@ -6,28 +6,21 @@ import pagefind from "lume/plugins/pagefind.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
 
 
-let location = new URL("http://localhost:3000/");
+const base = Deno.env.get("BASE_PATH") ?? "/";
 
-
-const repo = Deno.env.get("GITHUB_REPOSITORY");
-if (repo !== undefined) {
-    const [owner, name] = repo.split("/");
-
-    const isUserSite = name === `${owner}.github.io`;
-
-    const basePath = isUserSite ? "/" : `/${name}/`;
-    location = new URL(`https://${owner}.github.io${basePath}`);
-}
-
-const site = lume({
-  location,
-});
+const site = lume();
 
 site.loadPages([".song"], {
     loader: text,
 });
 
 site.preprocess([".song"], songPreprocessor);
+
+site.preprocess("*", (pages) => {
+    for (const page of pages) {
+        page.data.base = base;
+    }
+});
 
 site.use(esbuild({
     options: {

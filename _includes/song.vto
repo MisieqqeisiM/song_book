@@ -9,6 +9,8 @@
     <script src="/pagefind/pagefind-component-ui.js" type="module"></script>
     <script src="/main.js"></script>
 
+    <pagefind-config base-url="{{ base }}"></pagefind-config>
+    <pagefind-config bundle-path="{{ base }}pagefind/" ></pagefind-config>
     <title>{{ title }}</title>
   </head>
   <body>
@@ -16,10 +18,10 @@
     <pagefind-modal-trigger></pagefind-modal-trigger>
     <pagefind-modal></pagefind-modal>
   </div>
-  <div class="song-container" data-pagefind-body>
+  <div class="song-container">
     <div class="song-header">
-        <h1 class="song-title">{{ title }}</h1>
-        <div class="song-author">{{ author }}</div>
+        <h1 class="song-title" data-pagefind-meta="title">{{ title }}</h1>
+        <div class="song-author" data-pagefind-meta="author">{{ author }}</div>
     </div>
     <div class="transpose-controls">
         <button id="transpose-down">-</button>
@@ -27,6 +29,9 @@
         <button id="transpose-up">+</button>
     </div>
     {{ content }}
+    </div>
+    <div data-pagefind-body style="display: none;">
+      {{ lyrics }}
     </div>
     <script src="/transpose.js"></script>
     <script src="/searchbar.js"></script>
