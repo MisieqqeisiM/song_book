@@ -52,10 +52,8 @@ async function fromCache(request) {
 }
 
 async function update(request) {
-  const url = new URL(request.url);
-  url.search = '';
   const cache = await caches.open(PRECACHE);
-  const response = await fetch(url);
-  await cache.put(url.toString(), response.clone());
+  const response = await fetch(request);
+  await cache.put(request, response.clone());
   return response;
 }
