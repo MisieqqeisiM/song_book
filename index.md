@@ -1,6 +1,6 @@
 ---
 layout: layout.vto
-title: This is my website
+title: Song book
 ---
 
 ### Welcome
