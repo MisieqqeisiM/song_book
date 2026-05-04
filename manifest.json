@@ -1,7 +1,7 @@
 {
   "name": "Śpiewnik",
   "short_name": "Śpiewnik",
-  "start_url": "/",
+  "start_url": "{{base}}",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1a4fd1",
