@@ -26,9 +26,6 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', function(evt) {
   evt.respondWith(fromCache(evt.request));
-  evt.waitUntil(
-    update(evt.request)
-  );
 });
 
 async function fromCache(request) {
@@ -36,11 +33,4 @@ async function fromCache(request) {
   const cleanUrl = url.pathname;
   const cache = await caches.open(PRECACHE);
   return await cache.match(cleanUrl);
-}
-
-async function update(request) {
-  const cache = await caches.open(PRECACHE);
-  const response = await fetch(request);
-  await cache.put(request, response.clone());
-  return response;
 }
