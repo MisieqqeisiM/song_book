@@ -29,9 +29,9 @@ self.addEventListener('fetch', function(evt) {
     return;
   }
   evt.respondWith(fromCache(evt.request));
-  evt.waitUntil(
-    update(evt.request)
-  );
+  // evt.waitUntil(
+  //   update(evt.request)
+  // );
 });
 
 async function fromCache(request) {
