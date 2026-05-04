@@ -45,6 +45,12 @@ site.process([".json"], (pages) => {
     }
 });
 
+site.process([".js"], (pages) => {
+    for (const page of pages) {
+        page.text = page.text.replace(/{{\s*base\s*}}/g, base);
+    }
+});
+
 site.addEventListener("afterBuild", () => {
     const urls = site.pages.map(page => page.outputPath);
     Deno.writeTextFileSync("_site/cache.json", JSON.stringify(urls));
