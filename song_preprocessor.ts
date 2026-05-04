@@ -65,7 +65,7 @@ function verseToHtmlTable(verse: string[]): string {
         return `
             <tr>
                 <td>${escapeHtml(lyrics)}</td>
-                <td>${chordsHtml}</td>
+                <td class="chords">${chordsHtml}</td>
             </tr>
         `;
     });

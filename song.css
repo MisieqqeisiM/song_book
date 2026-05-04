@@ -123,6 +123,10 @@ body {
   border-collapse: collapse;
 }
 
+.chords {
+  min-width: 50px;
+}
+
 .song-table tr {
   border-bottom: 1px solid #eee;
 }
