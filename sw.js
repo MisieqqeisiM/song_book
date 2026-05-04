@@ -35,7 +35,7 @@ self.addEventListener('fetch', function(evt) {
 });
 
 async function fromCache(request) {
-  const url = new URL(event.request.url);
+  const url = new URL(request.url);
 
   url.search = '';
 
