@@ -1,36 +1,36 @@
 const PRECACHE = 'precache-{{buildHash}}';
 
 self.addEventListener('install', event => {
-  event.waitUntil(async function() {
-    const response = await fetch("./cache.json");
-    const urls = await response.json();
-    const cache = await caches.open(PRECACHE);
-    await cache.addAll(urls);
-    await self.skipWaiting();
-  }());
+    event.waitUntil(async function () {
+        const response = await fetch("./cache.json");
+        const urls = await response.json();
+        const cache = await caches.open(PRECACHE);
+        await cache.addAll(urls.map(url => "{{base}}" + url));
+        await self.skipWaiting();
+    }());
 });
 
 self.addEventListener('activate', event => {
-  const currentCaches = [PRECACHE];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
-    }).then(cachesToDelete => {
-      return Promise.all(cachesToDelete.map(cacheToDelete => {
-        return caches.delete(cacheToDelete);
-      }));
-    }).then(() => self.clients.claim())
-  );
+    const currentCaches = [PRECACHE];
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
+        }).then(cachesToDelete => {
+            return Promise.all(cachesToDelete.map(cacheToDelete => {
+                return caches.delete(cacheToDelete);
+            }));
+        }).then(() => self.clients.claim())
+    );
 });
 
 
-self.addEventListener('fetch', function(evt) {
-  evt.respondWith(fromCache(evt.request));
+self.addEventListener('fetch', function (evt) {
+    evt.respondWith(fromCache(evt.request));
 });
 
 async function fromCache(request) {
-  const url = new URL(request.url);
-  const cleanUrl = url.pathname;
-  const cache = await caches.open(PRECACHE);
-  return await cache.match(cleanUrl);
+    const url = new URL(request.url);
+    const cleanUrl = url.pathname;
+    const cache = await caches.open(PRECACHE);
+    return await cache.match(cleanUrl) ?? fetch(request);
 }

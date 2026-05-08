@@ -1,44 +1,46 @@
 import lume from "lume/mod.ts";
 import esbuild from "lume/plugins/esbuild.ts";
 import text from "lume/core/loaders/text.ts";
-import { songPreprocessor } from "./song_preprocessor.ts";
-import pagefind from "lume/plugins/pagefind.ts";
-import relativeUrls from "lume/plugins/relative_urls.ts";
 import googleFonts from "lume/plugins/google_fonts.ts";
+import pagefind from "./pagefind.ts"
+import { walk } from "lume/deps/fs.ts";
+import Song from "./lib/song.ts";
 
-const base = Deno.env.get("BASE_PATH") ?? "/";
-const buildHash = crypto.randomUUID(); // TODO: Generate hash based on content
-
-const site = lume();
+const site = lume({server: {
+    debugBar: false,
+}});
 
 site.loadPages([".song"], {
     loader: text,
 });
 
-site.preprocess([".song"], songPreprocessor);
-
-site.preprocess("*", (pages) => {
+site.preprocess([".song"], (pages) => {
     for (const page of pages) {
-        page.data.base = base;
+        const song = new Song(page.data.content as string);
+        page.data.title = song.title;
+        page.data.author = song.author;
+        page.data.content = song.html();
+        page.data.lyrics = song.lyrics();
+        page.data.layout = "song.vto";
     }
 });
+
+site.use(pagefind);
 
 site.use(esbuild({
     options: {
         minify: false,
     }
 }));
-site.add("transpose.ts");
-site.add("main.ts");
-site.add("searchbar.ts");
-site.add("song.css");
-site.add("home.css");
-site.add("sw.js");
-site.add("manifest.json");
+
+site.add("styles");
+site.add("client_scripts");
 site.add("img");
 
-site.use(pagefind());
-site.use(relativeUrls());
+site.add("sw.js");
+site.add("manifest.json");
+
+
 site.use(googleFonts({
   fonts: {
     inter: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900", 
@@ -47,7 +49,7 @@ site.use(googleFonts({
 
 site.process([".json"], (pages) => {
     for (const page of pages) {
-        page.text = page.text.replace(/{{\s*base\s*}}/g, base);
+        page.text = page.text.replace(/{{\s*base\s*}}/g, page.data.base);
     }
 });
 
@@ -55,15 +57,24 @@ site.process([".json"], (pages) => {
 site.process([".js"], (pages) => {
     for (const page of pages) {
         page.text = page.text
-            .replace(/{{\s*base\s*}}/g, base)
-            .replace(/{{\s*buildHash\s*}}/g, buildHash);
+            .replace(/{{\s*base\s*}}/g, page.data.base)
+            .replace(/{{\s*buildHash\s*}}/g, page.data.buildHash);
 
     }
 });
 
-site.addEventListener("afterBuild", () => {
-    const urls = site.pages.map(page => page.outputPath)
-        .map(path => base + path.substring(1));
+site.addEventListener("afterBuild", async () => {
+    const files = walk("_site");
+
+    const urls: string[] = [];
+
+    for await (const entry of files) {
+        if (entry.isFile) {
+            const url = entry.path.substring("_site/".length);
+            urls.push(url);
+        }
+    }
+    
     const indexUrls = urls.filter(url => url.endsWith("index.html")).map(url => url.substring(0, url.length - "index.html".length));
     urls.push(...indexUrls);
     Deno.writeTextFileSync("_site/cache.json", JSON.stringify(urls));
