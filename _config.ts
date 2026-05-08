@@ -5,6 +5,7 @@ import googleFonts from "lume/plugins/google_fonts.ts";
 import pagefind from "./pagefind.ts"
 import { walk } from "lume/deps/fs.ts";
 import Song from "./lib/song.ts";
+import relativeUrls from "lume/plugins/relative_urls.ts";
 
 const site = lume({server: {
     debugBar: false,
@@ -62,6 +63,8 @@ site.process([".js"], (pages) => {
 
     }
 });
+
+site.use(relativeUrls());
 
 site.addEventListener("afterBuild", async () => {
     const files = walk("_site");
