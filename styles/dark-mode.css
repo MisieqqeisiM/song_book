@@ -62,7 +62,6 @@ body.dark-mode h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
 }
 
 .dark-mode-toggle:hover {
@@ -84,7 +83,6 @@ body.dark-mode h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   font-size: 18px;
 }
 

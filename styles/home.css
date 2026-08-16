@@ -51,7 +51,7 @@ h3 {
     font-size: 16px;
     font-family: "inter", sans-serif;
     cursor: pointer;
-    transition: background 0.2s;
+
     display: flex;
     align-items: center;
     gap: 8px;
