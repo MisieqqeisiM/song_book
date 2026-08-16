@@ -3,8 +3,8 @@
   "short_name": "Śpiewnik",
   "start_url": "{{base}}",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a4fd1",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "{{base}}img/icon-192.png",
