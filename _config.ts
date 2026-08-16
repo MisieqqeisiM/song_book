@@ -80,6 +80,7 @@ site.addEventListener("afterBuild", async () => {
     
     const indexUrls = urls.filter(url => url.endsWith("index.html")).map(url => url.substring(0, url.length - "index.html".length));
     urls.push(...indexUrls);
+    urls.push("songs.json");
     Deno.writeTextFileSync("_site/cache.json", JSON.stringify(urls));
 
     const songUrls = indexUrls.filter(url => url.startsWith("songs/"));
