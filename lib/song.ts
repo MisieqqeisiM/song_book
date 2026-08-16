@@ -192,37 +192,7 @@ function parseChords(chords: string): ChordPart[] {
 
     for (const token of tokens) {
         if (!token) continue;
-
-        // Check for full parenthesized group like "(F G)"
-        if (/^\(.+\)$/.test(token)) {
-            const inner = token.slice(1, -1).trim();
-            parts.push({ type: "paren", value: "(" });
-            if (inner) {
-                const innerTokens = inner.split(/\s+/);
-                for (const t of innerTokens) {
-                    if (t) parts.push({ type: "chord", value: t });
-                }
-            }
-            parts.push({ type: "paren", value: ")" });
-            continue;
-        }
-
-        // Handle "(F" - starts with paren
-        if (token.startsWith("(")) {
-            parts.push({ type: "paren", value: "(" });
-            const inner = token.slice(1);
-            if (inner) parts.push({ type: "chord", value: inner });
-        }
-        // Handle "G)" - ends with paren
-        else if (token.endsWith(")")) {
-            const inner = token.slice(0, -1);
-            if (inner) parts.push({ type: "chord", value: inner });
-            parts.push({ type: "paren", value: ")" });
-        }
-        // Regular chord
-        else {
-            parts.push({ type: "chord", value: token });
-        }
+        parts.push({ type: "chord", value: token });
     }
 
     return parts;
