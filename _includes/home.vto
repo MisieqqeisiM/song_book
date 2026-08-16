@@ -12,6 +12,7 @@
     <script src="/client_scripts/main.js"></script>
     <pagefind-config base-url="{{ base }}"></pagefind-config>
     <pagefind-config bundle-path="{{ base }}pagefind/" ></pagefind-config>
+    <link rel="icon" href="{{ base }}img/icon-192.png" type="image/png">
     <title>{{ title }}</title>
   </head>
   <body>
@@ -19,6 +20,7 @@
       {{ content }}
       <div class="search-container">
         <pagefind-searchbox></pagefind-searchbox>
+        <button class="random-song-btn" id="randomSongBtn">🎲 Random Song</button>
       </div>
     </div>
     <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
