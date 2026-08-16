@@ -87,6 +87,32 @@ class Line {
     }
 
     html(): string {
+        // Group paren with its immediately adjacent chord
+        // (C) → single group of 3, (A → group of 2, B) → group of 2
+        const groups: ChordPart[][] = [];
+        for (const part of this.chordParts) {
+            if (groups.length === 0) {
+                groups.push([part]);
+            } else {
+                const lastGroup = groups[groups.length - 1];
+                const lastPart = lastGroup[lastGroup.length - 1];
+                if ((lastPart.type === "paren" && part.type === "chord") ||
+                    (lastPart.type === "chord" && part.type === "paren")) {
+                    if (lastPart.value === "(" && part.type === "chord" && lastGroup.length === 1) {
+                        lastGroup.push(part);
+                    } else if (lastPart.type === "chord" && part.value === ")" && lastGroup[0].value === "(" && lastGroup.length === 2) {
+                        lastGroup.push(part);
+                    } else if (lastGroup.length < 2) {
+                        lastGroup.push(part);
+                    } else {
+                        groups.push([part]);
+                    }
+                } else {
+                    groups.push([part]);
+                }
+            }
+        }
+
         let html = "";
         for (let i = 0; i < this.chordParts.length; i++) {
             const part = this.chordParts[i];
@@ -103,9 +129,22 @@ class Line {
             }
 
             if (needsSpace) html += " ";
-            html += part.type === "paren"
-                ? `<span class="paren">${escaped}</span>`
-                : `<span class="chord" data-original-chord="${escaped}">${escaped}</span>`;
+
+            // Find which group this part belongs to
+            const partGroup = groups.find(g => g.includes(part));
+            if (partGroup) {
+                const isFirst = partGroup[0] === part;
+                const isLast = partGroup[partGroup.length - 1] === part;
+                if (isFirst) {
+                    html += `<span class="chord-group">`;
+                }
+                html += part.type === "paren"
+                    ? `<span class="paren">${escaped}</span>`
+                    : `<span class="chord" data-original-chord="${escaped}">${escaped}</span>`;
+                if (isLast) {
+                    html += `</span>`;
+                }
+            }
         }
 
         return `
@@ -124,6 +163,16 @@ interface ChordPart {
 
 function normalizeChords(chords: string): string {
     let result = chords;
+    // Convert flat chords to sharp equivalents (German notation)
+    result = result.replace(/\bBes/g, "A");
+    result = result.replace(/\bEs/g, "Dis");
+    result = result.replace(/\bDes/g, "Cis");
+    result = result.replace(/\bAs/g, "Gis");
+    result = result.replace(/\bGes/g, "Fis");
+    result = result.replace(/\bes\b/g, "dis");
+    result = result.replace(/\bdes\b/g, "cis");
+    result = result.replace(/\bas\b/g, "gis");
+    result = result.replace(/\bges\b/g, "fis");
     // Remove space after opening paren
     result = result.replace(/\(\s+/, "(");
     // Remove space before closing paren

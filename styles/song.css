@@ -156,6 +156,10 @@ body {
   padding-left: 10px;
 }
 
+.chord-group {
+  white-space: nowrap;
+}
+
 .chord {
   display: inline-block;
   color: var(--accent-color);
