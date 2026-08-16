@@ -1,0 +1,55 @@
+/* Dark mode styles */
+:root {
+  --background-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --card-background: #2d2d2d;
+  --card-shadow: rgba(0, 0, 0, 0.5);
+  --border-color: #444;
+  --search-bg: #333;
+  --search-text: #fff;
+}
+
+body.dark-mode {
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .home-container {
+  background: var(--card-background);
+  box-shadow: 0 4px 20px var(--card-shadow);
+}
+
+body.dark-mode h3 {
+  color: var(--text-color);
+}
+
+body.dark-mode .search-container {
+  background: var(--search-bg);
+}
+
+body.dark-mode p {
+  color: var(--text-color);
+}
+
+/* Dark mode toggle button styles */
+.dark-mode-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--background-color);
+  border-color: var(--text-color);
+}
