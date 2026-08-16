@@ -19,7 +19,7 @@
       "purpose": "any"
     },
     {
-      "src": "{{base}}img/icon-512-maskable.png",
+      "src": "{{base}}img/icon-512-maskable-v2.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
