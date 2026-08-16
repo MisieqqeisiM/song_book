@@ -162,6 +162,12 @@ body {
   font-weight: 600;
 }
 
+.paren {
+  display: inline-block;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
 @media (max-width: 720px) {
   body {
     padding: 0px;

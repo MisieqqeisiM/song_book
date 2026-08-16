@@ -75,31 +75,108 @@ class Verse {
 // TODO: handle chord placement in the middle of the line, e.g. "This is a [C]line with chords [G]in the middle"
 class Line {
     readonly lyrics: string;
-    readonly chords: string[];
+    readonly chordParts: ChordPart[];
 
     constructor (content: string) {
         const match = content.match(/^(.*?)\s*\[(.*?)\]\s*$/);
         const lyrics = match ? match[1].trim() : content.trim();
         const chordsRaw = match ? match[2].trim() : "";
         this.lyrics = lyrics;
-        this.chords = chordsRaw
-            .split(/\s+/)
-            .map(chord => chord.trim())
-            .filter(chord => chord !== "");
+        const normalized = normalizeChords(chordsRaw);
+        this.chordParts = parseChords(normalized);
     }
 
     html(): string {
-        const chordsHtml = this.chords
-            .map(chord => escapeHtml(chord))
-            .map(chord => `<span class="chord" data-original-chord="${chord}">${chord}</span>`).join(" ");
+        let html = "";
+        for (let i = 0; i < this.chordParts.length; i++) {
+            const part = this.chordParts[i];
+            const escaped = escapeHtml(part.value);
+            const prevPart = i > 0 ? this.chordParts[i - 1] : null;
+
+            let needsSpace = false;
+            if (i > 0) {
+                if (part.type === "paren" && part.value === "(") {
+                    needsSpace = true;
+                } else if (part.type === "chord") {
+                    needsSpace = prevPart?.type === "chord" || prevPart?.value === ")";
+                }
+            }
+
+            if (needsSpace) html += " ";
+            html += part.type === "paren"
+                ? `<span class="paren">${escaped}</span>`
+                : `<span class="chord" data-original-chord="${escaped}">${escaped}</span>`;
+        }
 
         return `
             <tr>
                 <td>${escapeHtml(this.lyrics)}</td>
-                <td class="chords">${chordsHtml}</td>
+                <td class="chords">${html}</td>
             </tr>
         `;
     }
+}
+
+interface ChordPart {
+    type: "chord" | "paren";
+    value: string;
+}
+
+function normalizeChords(chords: string): string {
+    let result = chords;
+    // Remove space after opening paren
+    result = result.replace(/\(\s+/, "(");
+    // Remove space before closing paren
+    result = result.replace(/\s+\)/, ")");
+    // Add space before opening paren if no space before it
+    result = result.replace(/(\S)\(/g, "$1 (");
+    // Add space after closing paren if no space after it
+    result = result.replace(/\)(\S)/g, ") $1");
+    // Collapse multiple spaces
+    result = result.replace(/\s+/g, " ");
+    return result.trim();
+}
+
+function parseChords(chords: string): ChordPart[] {
+    const parts: ChordPart[] = [];
+    const tokens = chords.split(/\s+/);
+
+    for (const token of tokens) {
+        if (!token) continue;
+
+        // Check for full parenthesized group like "(F G)"
+        if (/^\(.+\)$/.test(token)) {
+            const inner = token.slice(1, -1).trim();
+            parts.push({ type: "paren", value: "(" });
+            if (inner) {
+                const innerTokens = inner.split(/\s+/);
+                for (const t of innerTokens) {
+                    if (t) parts.push({ type: "chord", value: t });
+                }
+            }
+            parts.push({ type: "paren", value: ")" });
+            continue;
+        }
+
+        // Handle "(F" - starts with paren
+        if (token.startsWith("(")) {
+            parts.push({ type: "paren", value: "(" });
+            const inner = token.slice(1);
+            if (inner) parts.push({ type: "chord", value: inner });
+        }
+        // Handle "G)" - ends with paren
+        else if (token.endsWith(")")) {
+            const inner = token.slice(0, -1);
+            if (inner) parts.push({ type: "chord", value: inner });
+            parts.push({ type: "paren", value: ")" });
+        }
+        // Regular chord
+        else {
+            parts.push({ type: "chord", value: token });
+        }
+    }
+
+    return parts;
 }
 
 function escapeHtml(text: string): string {
