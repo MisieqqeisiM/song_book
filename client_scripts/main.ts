@@ -13,10 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('dark-mode');
             document.documentElement.setAttribute('data-pf-theme', 'dark');
             if (darkModeIcon) darkModeIcon.textContent = '🌙';
+            const metaTheme = document.getElementById('theme-color-meta');
+            if (metaTheme) metaTheme.setAttribute('content', '#121212');
         } else {
             document.body.classList.remove('dark-mode');
             document.documentElement.removeAttribute('data-pf-theme');
             if (darkModeIcon) darkModeIcon.textContent = '☀️';
+            const metaTheme = document.getElementById('theme-color-meta');
+            if (metaTheme) metaTheme.setAttribute('content', '#f5f5f5');
         }
     }
 
@@ -38,8 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const isDark = document.body.classList.toggle('dark-mode');
             if (isDark) {
                 document.documentElement.setAttribute('data-pf-theme', 'dark');
+                const metaTheme = document.getElementById('theme-color-meta');
+                if (metaTheme) metaTheme.setAttribute('content', '#121212');
             } else {
                 document.documentElement.removeAttribute('data-pf-theme');
+                const metaTheme = document.getElementById('theme-color-meta');
+                if (metaTheme) metaTheme.setAttribute('content', '#f5f5f5');
             }
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             if (darkModeIcon) darkModeIcon.textContent = isDark ? '🌙' : '☀️';
