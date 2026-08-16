@@ -22,6 +22,8 @@ body {
   align-items: center;
 
   min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 20px;
 }
 

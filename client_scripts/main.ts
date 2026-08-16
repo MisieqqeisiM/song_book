@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set theme based on saved preference or system preference
     applyTheme(getIsDark());
 
+    // Re-apply theme on pageshow to handle bfcache restores (back button)
+    window.addEventListener('pageshow', () => {
+        applyTheme(getIsDark());
+    });
+
     // Toggle dark mode using event delegation
     document.addEventListener('click', (e) => {
         const target = e.target as HTMLElement;
