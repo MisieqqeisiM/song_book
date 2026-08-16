@@ -69,3 +69,31 @@ body.dark-mode h3 {
   background: var(--toggle-hover-bg);
   border-color: var(--text-color);
 }
+
+.keep-screen-on-toggle {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  background: var(--toggle-bg);
+  border: 1px solid var(--toggle-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.keep-screen-on-toggle:hover {
+  background: var(--toggle-hover-bg);
+  border-color: var(--text-color);
+}
+
+.keep-screen-on-toggle.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}

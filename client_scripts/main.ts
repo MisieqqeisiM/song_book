@@ -69,4 +69,56 @@ document.addEventListener('DOMContentLoaded', () => {
             applyTheme(e.matches);
         }
     });
+
+    // Keep screen on functionality
+    let wakeLock: any = null;
+    const keepScreenOnToggle = document.getElementById('keepScreenOnToggle');
+    const keepScreenOnIcon = document.getElementById('keepScreenOnIcon');
+
+    async function enableWakeLock() {
+        if (!("wakeLock" in navigator)) {
+            console.log("Screen Wake Lock is not supported");
+            return;
+        }
+
+        try {
+            wakeLock = await (navigator as any).wakeLock.request('screen');
+            localStorage.setItem('keepScreenOn', 'true');
+            if (keepScreenOnToggle) keepScreenOnToggle.classList.add('active');
+        } catch (err) {
+            console.error("Wake lock request failed:", err);
+            localStorage.setItem('keepScreenOn', 'false');
+        }
+    }
+
+    async function disableWakeLock() {
+        localStorage.setItem('keepScreenOn', 'false');
+        if (keepScreenOnToggle) keepScreenOnToggle.classList.remove('active');
+
+        if (wakeLock) {
+            await wakeLock.release();
+            wakeLock = null;
+        }
+    }
+
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.classList.contains('keep-screen-on-toggle') || target.closest('.keep-screen-on-toggle')) {
+            if (wakeLock) {
+                disableWakeLock();
+            } else {
+                enableWakeLock();
+            }
+        }
+    });
+
+    document.addEventListener('visibilitychange', async () => {
+        if (document.visibilityState === 'visible' && localStorage.getItem('keepScreenOn') === 'true') {
+            await enableWakeLock();
+        }
+    });
+
+    if (localStorage.getItem('keepScreenOn') === 'true') {
+        enableWakeLock();
+    }
 });
