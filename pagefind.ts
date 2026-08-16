@@ -9,7 +9,7 @@ export default (site: Site) => {
         for (const song of songs) {
             index.addCustomRecord({
                 url: song.outputPath.replace("index.html", ""),
-                content: `${song.data.title ?? "Untitled"} ${song.data.author ?? "Unknown"}\n\n${song.data.lyrics}`,
+                content: `${song.data.lyrics}`,
                 meta: {
                     title: song.data.title ?? "Untitled",
                     author: song.data.author ?? "Unknown",
