@@ -97,3 +97,22 @@ body.dark-mode h3 {
   background: var(--accent-color);
   border-color: var(--accent-color);
 }
+
+.keep-screen-on-toggle.active svg {
+  color: #fff;
+}
+
+body.dark-mode .keep-screen-on-toggle.active svg {
+  color: #fff;
+}
+
+.dark-mode-toggle svg,
+.keep-screen-on-toggle svg {
+  color: var(--text-color);
+}
+
+body.dark-mode .dark-mode-toggle svg,
+body.dark-mode .keep-screen-on-toggle svg {
+  color: var(--text-color);
+}
+

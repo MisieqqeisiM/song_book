@@ -1,6 +1,7 @@
 import lume from "lume/mod.ts";
 import esbuild from "lume/plugins/esbuild.ts";
 import text from "lume/core/loaders/text.ts";
+import icons from "lume/plugins/icons.ts";
 import googleFonts from "lume/plugins/google_fonts.ts";
 import pagefind from "./pagefind.ts"
 import { walk } from "lume/deps/fs.ts";
@@ -27,6 +28,7 @@ site.preprocess([".song"], (pages) => {
 });
 
 site.use(pagefind);
+site.use(icons());
 
 site.use(esbuild({
     options: {

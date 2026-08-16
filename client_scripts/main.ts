@@ -6,19 +6,22 @@ if ("serviceWorker" in navigator) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Dark mode functionality
-    const darkModeIcon = document.getElementById('darkModeIcon');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
 
     function applyTheme(isDark) {
         if (isDark) {
             document.body.classList.add('dark-mode');
             document.documentElement.setAttribute('data-pf-theme', 'dark');
-            if (darkModeIcon) darkModeIcon.textContent = '🌙';
+            if (sunIcon) sunIcon.style.display = 'none';
+            if (moonIcon) moonIcon.style.display = 'block';
             const metaTheme = document.getElementById('theme-color-meta');
             if (metaTheme) metaTheme.setAttribute('content', '#121212');
         } else {
             document.body.classList.remove('dark-mode');
             document.documentElement.removeAttribute('data-pf-theme');
-            if (darkModeIcon) darkModeIcon.textContent = '☀️';
+            if (sunIcon) sunIcon.style.display = 'block';
+            if (moonIcon) moonIcon.style.display = 'none';
             const metaTheme = document.getElementById('theme-color-meta');
             if (metaTheme) metaTheme.setAttribute('content', '#f5f5f5');
         }
@@ -55,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (metaTheme) metaTheme.setAttribute('content', '#f5f5f5');
             }
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            if (darkModeIcon) darkModeIcon.textContent = isDark ? '🌙' : '☀️';
+            if (sunIcon) sunIcon.style.display = isDark ? 'none' : 'block';
+            if (moonIcon) moonIcon.style.display = isDark ? 'block' : 'none';
         }
     });
 

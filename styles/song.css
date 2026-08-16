@@ -6,6 +6,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -82,6 +83,17 @@ body {
   color: var(--accent-color);
   background-color: var(--card-background);
   cursor: pointer;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transpose-controls button svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-color);
 }
 
 .transpose-controls button:hover {
@@ -176,14 +188,13 @@ body {
 
 @media (max-width: 720px) {
   body {
-    padding: 0px;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    min-height: 100dvh;
   }
 
   .search-container {
-    top: 0;
-    left: 0;
     width: 100%;
     height: 55px;
     background: var(--search-bg);
@@ -200,8 +211,11 @@ body {
   }
 
   .song-container {
+    flex: 1;
     border-radius: 0;
     max-width: none;
     width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
